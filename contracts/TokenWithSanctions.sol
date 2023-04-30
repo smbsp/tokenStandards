@@ -2,22 +2,19 @@
 pragma solidity ^0.8.18;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "@openzeppelin/contracts/access/AccessControl.sol";
-import "hardhat/console.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
 /**
  * @dev A fungible token that allows an admin to ban specified addresses
  * from sending and receiving tokens.
  */
-contract TokenWithSanctions is ERC20, AccessControl {
+contract TokenWithSanctions is ERC20, Ownable {
     // State variables
-
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
     // Address -> Sanctioned(True/False)
     mapping(address => bool) public sanctions;
 
     // Events
-
     /**
      * @dev Emitted when an address is sanctioned by admin.
      */
@@ -32,36 +29,19 @@ contract TokenWithSanctions is ERC20, AccessControl {
      * The default value of {decimals} is 18.
      */
     constructor(string memory name, string memory symbol) ERC20(name, symbol) {
-        _setupRole(ADMIN_ROLE, msg.sender);
+        _mint(msg.sender, 1000000 * 10 ** 18); // Mint 1 million tokens to contract creator
     }
 
     // Functions
-
-    /**
-     * @dev See Openzeppelin Access Control.
-     * This adds an admin to the contract.
-     */
-    function addAdmin(address user) external onlyRole(ADMIN_ROLE) {
-        console.log(user);
-        console.logBytes32(ADMIN_ROLE);
-        grantRole(ADMIN_ROLE, user);
-    }
-
-    /**
-     * @dev See Openzeppelin Access Control.
-     * This removes an admin from the contract.
-     */
-    function removeAdmin(address user) external onlyRole(ADMIN_ROLE) {
-        revokeRole(ADMIN_ROLE, user);
-    }
-
     /**
      * @dev Imposes sanction to an address.
      * Requirements:
      * - only admin can impose a sanction
      */
-    function sanctionAddress(address _address) external onlyRole(ADMIN_ROLE) {
+    function sanctionAddress(address _address) external onlyOwner {
+        require(!sanctions[_address], "address already sanctioned");
         sanctions[_address] = true;
+        emit Sanction(_address);
     }
 
     /**
@@ -69,9 +49,10 @@ contract TokenWithSanctions is ERC20, AccessControl {
      * Requirements:
      * - only admin can withdraw a sanction
      */
-    function unsanctionAddress(address _address) external onlyRole(ADMIN_ROLE) {
+    function unsanctionAddress(address _address) external onlyOwner {
         require(sanctions[_address], "address not sanctioned");
         sanctions[_address] = false;
+        emit UnSanction(_address);
     }
 
     /**
@@ -101,6 +82,7 @@ contract TokenWithSanctions is ERC20, AccessControl {
         uint256 amount
     ) public virtual override returns (bool) {
         require(!sanctions[from], "sender sanctioned");
+        require(!sanctions[msg.sender], "approved sanctioned");
         require(!sanctions[to], "receiver sanctioned");
         return super.transferFrom(from, to, amount);
     }
