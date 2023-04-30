@@ -1,0 +1,4 @@
+{
+  "solidity.compileUsingLocalVersion": "0.8.18",
+  "solidity.compileUsingRemoteVersion": "0.8.18"
+}
