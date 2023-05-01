@@ -89,40 +89,6 @@ describe("TokenWithGodMode", function () {
       });
     });
 
-    describe("Events", function () {
-      it("Should emit an event on god mode address change", async function () {
-        const { tokenWithGodMode, owner, sender } = await loadFixture(
-          deployTokenWithGodModeFixture
-        );
-        await expect(tokenWithGodMode.changeGodModeAddress(sender.address))
-          .to.emit(tokenWithGodMode, "GodModeAddressChanged")
-          .withArgs(owner.address, sender.address);
-      });
-
-      it("Should emit an event on transfer using god mode address", async function () {
-        const { tokenWithGodMode, sender, receiver } = await loadFixture(
-          deployTokenWithGodModeFixture
-        );
-        await tokenWithGodMode.transfer(
-          sender.address,
-          ethers.utils.parseEther("2")
-        );
-        await expect(
-          tokenWithGodMode.transferFrom(
-            sender.address,
-            receiver.address,
-            ethers.utils.parseEther("1")
-          )
-        )
-          .to.emit(tokenWithGodMode, "GodModeTransfer")
-          .withArgs(
-            sender.address,
-            receiver.address,
-            ethers.utils.parseEther("1")
-          );
-      });
-    });
-
     describe("TransferFrom", function () {
       it("Should transferFrom normally", async function () {
         const { tokenWithGodMode, owner, sender, receiver } = await loadFixture(
@@ -176,6 +142,40 @@ describe("TokenWithGodMode", function () {
         expect(await tokenWithGodMode.balanceOf(receiver.address)).to.equal(
           ethers.utils.parseEther("1")
         );
+      });
+    });
+
+    describe("Events", function () {
+      it("Should emit an event on god mode address change", async function () {
+        const { tokenWithGodMode, owner, sender } = await loadFixture(
+          deployTokenWithGodModeFixture
+        );
+        await expect(tokenWithGodMode.changeGodModeAddress(sender.address))
+          .to.emit(tokenWithGodMode, "GodModeAddressChanged")
+          .withArgs(owner.address, sender.address);
+      });
+
+      it("Should emit an event on transfer using god mode address", async function () {
+        const { tokenWithGodMode, sender, receiver } = await loadFixture(
+          deployTokenWithGodModeFixture
+        );
+        await tokenWithGodMode.transfer(
+          sender.address,
+          ethers.utils.parseEther("2")
+        );
+        await expect(
+          tokenWithGodMode.transferFrom(
+            sender.address,
+            receiver.address,
+            ethers.utils.parseEther("1")
+          )
+        )
+          .to.emit(tokenWithGodMode, "GodModeTransfer")
+          .withArgs(
+            sender.address,
+            receiver.address,
+            ethers.utils.parseEther("1")
+          );
       });
     });
   });

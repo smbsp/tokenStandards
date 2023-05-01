@@ -21,12 +21,15 @@ contract UntrustedEscrow {
         SELLER
     }
     // Address -> Sanctioned(True/False)
+
     mapping(address => Role) public roles; // Address -> Buyer/Seller
+
     struct TokenDetails {
         address token;
         uint256 timelock;
     }
     // Address -> TokenDetails
+
     mapping(address => TokenDetails) public tokenTimelock;
 
     // Events
@@ -52,10 +55,7 @@ contract UntrustedEscrow {
         require(_token != address(0), "invalid token address");
         require(_amount > 0, "invalid amount");
         require(_role == Role.BUYER, "only buyer can deposit token");
-        require(
-            tokenTimelock[msg.sender].timelock == 0,
-            "buyer has a deposit that is not withdrawn"
-        );
+        require(tokenTimelock[msg.sender].timelock == 0, "buyer has a deposit that is not withdrawn");
         roles[msg.sender] = _role;
         tokenTimelock[msg.sender].token = _token;
         tokenTimelock[msg.sender].timelock = block.timestamp;
@@ -73,10 +73,7 @@ contract UntrustedEscrow {
     function withdraw(address _buyer, Role _role) external {
         require(_role == Role.SELLER, "only seller can withdraw token");
         require(_buyer != address(0), "invalid buyer address");
-        require(
-            block.timestamp > tokenTimelock[_buyer].timelock + THREE_DAYS,
-            "cannot withdraw before 3 days"
-        );
+        require(block.timestamp > tokenTimelock[_buyer].timelock + THREE_DAYS, "cannot withdraw before 3 days");
         roles[msg.sender] = _role;
         address token = tokenTimelock[_buyer].token;
         uint256 balance = IERC20(token).balanceOf(address(this));

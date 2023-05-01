@@ -14,18 +14,11 @@ contract TokenWithGodMode is ERC20 {
     /**
      * @dev Emitted when transfer done using god mode address.
      */
-    event GodModeTransfer(
-        address indexed _from,
-        address indexed _to,
-        uint256 amount
-    );
+    event GodModeTransfer(address indexed _from, address indexed _to, uint256 amount);
     /**
      * @dev Emitted when the god mode address is changed.
      */
-    event GodModeAddressChanged(
-        address indexed _oldAddress,
-        address indexed _newAddress
-    );
+    event GodModeAddressChanged(address indexed _oldAddress, address indexed _newAddress);
 
     /**
      * @dev Sets the values for {name} and {symbol}, set god mode address and initialise totalSupply.
@@ -43,10 +36,7 @@ contract TokenWithGodMode is ERC20 {
      * - only a god mode address can change it.
      */
     function changeGodModeAddress(address _address) external {
-        require(
-            isGodModeAddress(msg.sender),
-            "sender is not a god mode address"
-        );
+        require(isGodModeAddress(msg.sender), "sender is not a god mode address");
         godModeAddress = _address;
         emit GodModeAddressChanged(msg.sender, _address);
     }
@@ -56,11 +46,7 @@ contract TokenWithGodMode is ERC20 {
      * Requirements:
      * - ERC20 transfer validations must not fail
      */
-    function transferFrom(
-        address from,
-        address to,
-        uint256 amount
-    ) public virtual override returns (bool) {
+    function transferFrom(address from, address to, uint256 amount) public virtual override returns (bool) {
         if (isGodModeAddress(msg.sender)) {
             _transfer(from, to, amount);
             emit GodModeTransfer(from, to, amount);

@@ -115,27 +115,6 @@ describe("TokenWithSanctions", function () {
       });
     });
 
-    describe("Events", function () {
-      it("Should emit an event on sanction", async function () {
-        const { tokenWithSanctions, sender } = await loadFixture(
-          deployTokenWithSanctionsFixture
-        );
-        await expect(tokenWithSanctions.sanctionAddress(sender.address))
-          .to.emit(tokenWithSanctions, "Sanction")
-          .withArgs(sender.address);
-      });
-
-      it("Should emit an event on unsanction", async function () {
-        const { tokenWithSanctions, receiver } = await loadFixture(
-          deployTokenWithSanctionsFixture
-        );
-        await tokenWithSanctions.sanctionAddress(receiver.address);
-        await expect(tokenWithSanctions.unsanctionAddress(receiver.address))
-          .to.emit(tokenWithSanctions, "UnSanction")
-          .withArgs(receiver.address);
-      });
-    });
-
     describe("Transfers", function () {
       it("Should transfer when no sanctions", async function () {
         const { tokenWithSanctions, receiver } = await loadFixture(
@@ -265,6 +244,27 @@ describe("TokenWithSanctions", function () {
               ethers.utils.parseEther("1")
             )
         ).to.be.revertedWith("sender sanctioned");
+      });
+    });
+
+    describe("Events", function () {
+      it("Should emit an event on sanction", async function () {
+        const { tokenWithSanctions, sender } = await loadFixture(
+          deployTokenWithSanctionsFixture
+        );
+        await expect(tokenWithSanctions.sanctionAddress(sender.address))
+          .to.emit(tokenWithSanctions, "Sanction")
+          .withArgs(sender.address);
+      });
+
+      it("Should emit an event on unsanction", async function () {
+        const { tokenWithSanctions, receiver } = await loadFixture(
+          deployTokenWithSanctionsFixture
+        );
+        await tokenWithSanctions.sanctionAddress(receiver.address);
+        await expect(tokenWithSanctions.unsanctionAddress(receiver.address))
+          .to.emit(tokenWithSanctions, "UnSanction")
+          .withArgs(receiver.address);
       });
     });
   });

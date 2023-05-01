@@ -61,10 +61,7 @@ contract TokenWithSanctions is ERC20, Ownable {
      * - sender is not sanctioned
      * - receiver is not sanctioned
      */
-    function transfer(
-        address to,
-        uint256 amount
-    ) public virtual override returns (bool) {
+    function transfer(address to, uint256 amount) public virtual override returns (bool) {
         require(!sanctions[msg.sender], "sender sanctioned");
         require(!sanctions[to], "receiver sanctioned");
         return super.transfer(to, amount);
@@ -76,11 +73,7 @@ contract TokenWithSanctions is ERC20, Ownable {
      * - sender is not sanctioned
      * - receiver is not sanctioned
      */
-    function transferFrom(
-        address from,
-        address to,
-        uint256 amount
-    ) public virtual override returns (bool) {
+    function transferFrom(address from, address to, uint256 amount) public virtual override returns (bool) {
         require(!sanctions[from], "sender sanctioned");
         require(!sanctions[msg.sender], "approved sanctioned");
         require(!sanctions[to], "receiver sanctioned");
