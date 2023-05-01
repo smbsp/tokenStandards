@@ -12,7 +12,7 @@ _TokenWithGodMode.sol & TokenWithGodMode.js_ - A special address is able to tran
 
 _UntrustedEscrow.sol & UntrustedEscrow.js_ - A contract where a buyer can put an arbitrary ERC20 token into a contract and a seller can withdraw it 3 days later. This uses the SafeERC20 wrapper. This helps safely wrap several operations around ERC20.
 
-_UntrustedEscrowERC1363.sol & UntrustedEscrowERC1363.js_ - An attempt to create untrusted escrow using ERC1363. The idea is that a seller with his/her ERC1367 tokens will be able to withdraw ERC20 tokens deposited by a buyer. The buyer shall recieve ERC1613 tokens and the seller shall recieve the ERC20 tokens. The benefit is that this makes the tokens payable. This helps to make the token payable. It also uses SafeERC20 wrappers.
+_UntrustedEscrowERC1363.sol & UntrustedEscrowERC1363.js_ - An attempt to create untrusted escrow using ERC1363. The idea is that a seller with his/her ERC1367 tokens will be able to withdraw ERC20 tokens deposited by a buyer. The buyer shall recieve ERC1613 tokens and the seller shall recieve the ERC20 tokens. The benefit is that this makes the tokens payable. It also uses SafeERC20 wrappers.
 
 ```shell
 npx hardhat compile
