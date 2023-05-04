@@ -9,9 +9,12 @@ contract ERC1363Mock is ERC1363 {
     /**
      * @dev Constructor that gives msg.sender all of existing tokens.
      */
-    constructor(string memory name, string memory symbol, address initialAccount, uint256 initialBalance)
-        ERC20(name, symbol)
-    {
+    constructor(
+        string memory name,
+        string memory symbol,
+        address initialAccount,
+        uint256 initialBalance
+    ) ERC20(name, symbol) {
         _mint(initialAccount, initialBalance);
     }
 }

@@ -13,7 +13,11 @@
     "hardhat": "^2.14.0"
   },
   "dependencies": {
+    "@nomiclabs/hardhat-truffle5": "^2.0.7",
     "@openzeppelin/contracts": "^4.8.3",
-    "erc-payable-token": "^4.8.3"
+    "@openzeppelin/test-helpers": "^0.5.16",
+    "erc-payable-token": "^4.8.3",
+    "hardhat-exposed": "^0.3.2",
+    "solidity-coverage": "^0.8.2"
   }
 }
