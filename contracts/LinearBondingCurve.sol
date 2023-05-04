@@ -90,8 +90,25 @@ contract LinearBondingCurve is ERC1363Payable {
     function getTokenAmount(
         uint256 sentTokenAmount
     ) public view returns (uint256) {
-        uint256 price = ((slope * _token.totalSupply()) + basePrice) / 10 ** 18;
-        return (price * sentTokenAmount) / 10 ** 18;
+        return
+            (sentTokenAmount * 10 ** 18) /
+            (basePrice + (slope * (_token.totalSupply())));
+    }
+
+    /**
+     * @dev Sell ERC20 tokens and receive ERC1363 tokens based on current price.
+     * @param amount The amount of tokens to sell
+     */
+    function sellTokens(uint256 amount) external {
+        // Calculate current price
+        uint256 tokensToReceive = (amount *
+            (basePrice + slope * (_token.totalSupply() - amount))) / 10 ** 18;
+
+        // Transfer ERC20 tokens from seller to contract
+        _token.safeTransferFrom(msg.sender, address(this), amount);
+
+        // Transfer ERC1363 tokens to seller
+        IERC20(acceptedToken()).safeTransfer(msg.sender, tokensToReceive);
     }
 
     /**
