@@ -753,6 +753,30 @@ function shouldBehaveLikeLinearBondingCurve([
             );
           });
         });
+
+        // describe.only("sell tokens", function () {
+        //   it("should succesfully sell tokens", async function () {
+        //     await approveAndCallWithoutData.call(
+        //       this,
+        //       this.LinearBondingCurve.address,
+        //       value,
+        //       { from: beneficiary }
+        //     );
+
+        //     await this.erc1363Token.approve(
+        //       this.LinearBondingCurve.address,
+        //       new BN("10000000000000000000000000000000"),
+        //       {
+        //         from: wallet,
+        //       }
+        //     );
+        //     console.log("Hi");
+        //     let beforeWithdrawal = await this.erc1363Token.balanceOf(wallet);
+        //     await this.LinearBondingCurve.sellTokens(value);
+        //     let afterWithdrawal = await this.erc1363Token.balanceOf(wallet);
+        //     expect(afterWithdrawal).to.be.bignumber.lessThan(beforeWithdrawal);
+        //   });
+        // });
       });
     });
   });

@@ -3,6 +3,7 @@ pragma solidity ^0.8.18;
 
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "erc-payable-token/contracts/payment/ERC1363Payable.sol";
+import "hardhat/console.sol";
 
 /**
  * @title LinearBondingCurve
@@ -18,8 +19,8 @@ contract LinearBondingCurve is ERC1363Payable {
     using SafeERC20 for IERC20;
 
     // Constants
-    uint256 public constant slope = 0.00001 gwei;
-    uint256 public constant basePrice = 0.00001 gwei;
+    uint256 public constant SLOPE = 0.00001 gwei;
+    uint256 public constant BASEPRICE = 0.00001 gwei;
 
     // The token being sold
     IERC20 private _token;
@@ -92,7 +93,7 @@ contract LinearBondingCurve is ERC1363Payable {
     ) public view returns (uint256) {
         return
             (sentTokenAmount * 10 ** 18) /
-            (basePrice + (slope * (_token.totalSupply())));
+            (BASEPRICE + (SLOPE * (_token.totalSupply())));
     }
 
     /**
@@ -102,13 +103,18 @@ contract LinearBondingCurve is ERC1363Payable {
     function sellTokens(uint256 amount) external {
         // Calculate current price
         uint256 tokensToReceive = (amount *
-            (basePrice + slope * (_token.totalSupply() - amount))) / 10 ** 18;
+            (BASEPRICE + SLOPE * (_token.totalSupply() - amount))) / 10 ** 18;
 
+        console.log("tokensToReceive", tokensToReceive);
         // Transfer ERC20 tokens from seller to contract
         _token.safeTransferFrom(msg.sender, address(this), amount);
 
-        // Transfer ERC1363 tokens to seller
-        IERC20(acceptedToken()).safeTransfer(msg.sender, tokensToReceive);
+        // Transfer ERC1363 tokens to seller from wallet
+        IERC20(acceptedToken()).safeTransferFrom(
+            _wallet,
+            msg.sender,
+            tokensToReceive
+        );
     }
 
     /**
