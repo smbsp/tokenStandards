@@ -28,7 +28,10 @@ contract TokenWithSanctions is ERC20, Ownable {
      * @dev Sets the values for {name} and {symbol} and mark the msg.sender as admin.
      * The default value of {decimals} is 18.
      */
-    constructor(string memory name, string memory symbol) ERC20(name, symbol) {
+    constructor(
+        string memory _name,
+        string memory _symbol
+    ) ERC20(_name, _symbol) {
         _mint(msg.sender, 1000000 * 10 ** 18); // Mint 1 million tokens to contract creator
     }
 
@@ -56,34 +59,20 @@ contract TokenWithSanctions is ERC20, Ownable {
     }
 
     /**
-     * @dev 'transfer' prohibited for sanctioned addresses.
-     * Requirements:
-     * - sender is not sanctioned
-     * - receiver is not sanctioned
-     */
-    function transfer(address to, uint256 amount) public virtual override returns (bool) {
-        require(!sanctions[msg.sender], "sender sanctioned");
-        require(!sanctions[to], "receiver sanctioned");
-        return super.transfer(to, amount);
-    }
-
-    /**
-     * @dev 'transferFrom' prohibited for sanctioned addresses.
-     * Requirements:
-     * - sender is not sanctioned
-     * - receiver is not sanctioned
-     */
-    function transferFrom(address from, address to, uint256 amount) public virtual override returns (bool) {
-        require(!sanctions[from], "sender sanctioned");
-        require(!sanctions[msg.sender], "approved sanctioned");
-        require(!sanctions[to], "receiver sanctioned");
-        return super.transferFrom(from, to, amount);
-    }
-
-    /**
      * @dev Returns if an address is sanctioned.
      */
     function isSanctioned(address _address) external view returns (bool) {
         return sanctions[_address];
+    }
+
+    function _beforeTokenTransfer(
+        address from,
+        address to,
+        uint256 amount
+    ) internal override {
+        require(!sanctions[msg.sender], "sender sanctioned");
+        require(!sanctions[from], "from sanctioned");
+        require(!sanctions[to], "receiver sanctioned");
+        return super._beforeTokenTransfer(from, to, amount);
     }
 }

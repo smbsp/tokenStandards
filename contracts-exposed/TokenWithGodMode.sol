@@ -7,7 +7,7 @@ import "../contracts/TokenWithGodMode.sol";
 contract $TokenWithGodMode is TokenWithGodMode {
     bytes32 public __hh_exposed_bytecode_marker = "hardhat-exposed";
 
-    constructor(string memory name, string memory symbol) TokenWithGodMode(name, symbol) {}
+    constructor(string memory _name, string memory _symbol) TokenWithGodMode(_name, _symbol) {}
 
     function $_transfer(address from,address to,uint256 amount) external {
         super._transfer(from,to,amount);

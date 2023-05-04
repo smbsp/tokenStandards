@@ -7,7 +7,11 @@ import "../contracts/TokenWithSanctions.sol";
 contract $TokenWithSanctions is TokenWithSanctions {
     bytes32 public __hh_exposed_bytecode_marker = "hardhat-exposed";
 
-    constructor(string memory name, string memory symbol) TokenWithSanctions(name, symbol) {}
+    constructor(string memory _name, string memory _symbol) TokenWithSanctions(_name, _symbol) {}
+
+    function $_beforeTokenTransfer(address from,address to,uint256 amount) external {
+        super._beforeTokenTransfer(from,to,amount);
+    }
 
     function $_checkOwner() external view {
         super._checkOwner();
@@ -35,10 +39,6 @@ contract $TokenWithSanctions is TokenWithSanctions {
 
     function $_spendAllowance(address owner,address spender,uint256 amount) external {
         super._spendAllowance(owner,spender,amount);
-    }
-
-    function $_beforeTokenTransfer(address from,address to,uint256 amount) external {
-        super._beforeTokenTransfer(from,to,amount);
     }
 
     function $_afterTokenTransfer(address from,address to,uint256 amount) external {

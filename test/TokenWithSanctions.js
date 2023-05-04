@@ -219,7 +219,7 @@ describe("TokenWithSanctions", function () {
               receiver.address,
               ethers.utils.parseEther("1")
             )
-        ).to.be.revertedWith("approved sanctioned");
+        ).to.be.revertedWith("sender sanctioned");
       });
 
       it("Should not transfer when sender is sanctioned", async function () {
@@ -237,13 +237,13 @@ describe("TokenWithSanctions", function () {
         await tokenWithSanctions.sanctionAddress(sender.address);
         await expect(
           tokenWithSanctions
-            .connect(sender)
+            .connect(approved)
             .transferFrom(
               sender.address,
               receiver.address,
               ethers.utils.parseEther("1")
             )
-        ).to.be.revertedWith("sender sanctioned");
+        ).to.be.revertedWith("from sanctioned");
       });
     });
 
